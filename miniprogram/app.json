@@ -1,0 +1,11 @@
+{
+  "pages": ["pages/index/index"],
+  "window": {
+    "navigationBarTitleText": "后会友期",
+    "navigationBarBackgroundColor": "#f8faf7",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f8faf7"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

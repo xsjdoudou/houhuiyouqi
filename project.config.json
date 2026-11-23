@@ -1,0 +1,9 @@
+{
+  "description": "后会友期人格测试",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "appid": "wxc36ec912c45e574c",
+  "projectname": "houhuiyouqi",
+  "setting": { "es6": true, "minified": true },
+  "compileType": "miniprogram"
+}

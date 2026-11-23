@@ -1,0 +1,66 @@
+.page { box-sizing: border-box; max-width: 560px; min-height: 100vh; margin: 0 auto; padding: 0 24px calc(28px + env(safe-area-inset-bottom)); }
+.top { height: 62px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e4ebe5; }
+.brand { display: flex; align-items: center; gap: 9px; color: #2d5044; font-size: 16px; font-weight: 700; }
+.brand-mark { display: flex; align-items: center; justify-content: center; width: 25px; height: 25px; border-radius: 7px; background: #3d7560; color: #fff; font-size: 14px; }
+.top-note { color: #9aa9a0; font-size: 10px; font-weight: 600; }
+.home, .result, .history { padding-top: 30px; }
+.quiz { padding-top: 28px; }
+.eyebrow { display: flex; align-items: center; color: #638273; font-size: 12px; font-weight: 600; line-height: 20px; }
+.dot { display: inline-block; width: 7px; height: 7px; background: #dd9a7f; border-radius: 50%; margin-right: 8px; }
+.hero-title { margin-top: 15px; font-size: 30px; line-height: 1.4; font-weight: 700; color: #253b32; }
+.hero-copy { margin-top: 13px; color: #6c8075; font-size: 14px; line-height: 1.85; }
+.art { box-sizing: border-box; min-height: 176px; margin-top: 25px; padding: 20px; background: #e4eee6; border-radius: 6px; display: flex; flex-direction: column; justify-content: space-between; }
+.art-caption { color: #769286; font-size: 10px; line-height: 1.45; font-weight: 700; }
+.art-quote { margin: 13px 0; color: #3e6655; font-size: 19px; font-weight: 600; line-height: 1.45; }
+.art-bottom { display: flex; justify-content: space-between; align-items: center; color: #789287; font-size: 10px; }
+.details { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 21px 0; color: #72877b; font-size: 12px; }
+.detail-divider { height: 11px; width: 1px; background: #d7e0d8; }
+.primary { position: relative; box-sizing: border-box; width: 100%; min-height: 52px; padding: 16px 46px; background: #376d59; color: #fff; font-size: 15px; font-weight: 600; line-height: 20px; text-align: center; border-radius: 6px; }
+.primary[disabled] { background: #c1cec5; color: #fff; }
+.arrow { position: absolute; right: 20px; top: 15px; font-size: 18px; line-height: 20px; }
+.text-button { padding: 18px 0; width: 100%; color: #527565; font-size: 13px; line-height: 20px; text-align: center; }
+.disclaimer { color: #87998e; font-size: 11px; line-height: 1.7; text-align: center; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; color: #7a8d81; font-size: 12px; line-height: 20px; }
+.current-number { color: #376d59; font-weight: 700; font-size: 15px; }
+.progress { height: 4px; margin-top: 12px; background: #e3ebe4; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: #6a9c80; border-radius: 4px; transition: width .2s ease; }
+.question-label { margin-top: 38px; color: #c48168; font-size: 11px; font-weight: 700; line-height: 18px; }
+.question-number { margin-left: 4px; }
+.question-title { margin-top: 12px; color: #263b32; font-size: 23px; font-weight: 700; line-height: 1.5; }
+.question-hint { margin-top: 10px; color: #87988e; font-size: 13px; line-height: 20px; }
+.options { margin: 24px 0 28px; }
+.option { display: flex; align-items: center; min-height: 66px; width: 100%; box-sizing: border-box; padding: 13px 15px; margin-bottom: 10px; text-align: left; border: 1px solid #e0e9e1; background: #fff; border-radius: 6px; }
+.option-selected { border-color: #6f9c80; background: #edf5ee; }
+.option-letter { flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin-right: 13px; background: #f1f5f1; border-radius: 5px; color: #799081; font-size: 12px; font-weight: 700; }
+.option-selected .option-letter { background: #d9eade; color: #376d59; }
+.option-text { flex: 1; min-width: 0; color: #35483e; font-size: 14px; line-height: 1.55; }
+.option-check { flex: none; box-sizing: border-box; width: 19px; height: 19px; margin-left: 10px; border: 1px solid #cddbd0; border-radius: 50%; color: #fff; font-size: 12px; line-height: 17px; text-align: center; }
+.option-check.checked { border-color: #55876b; background: #55876b; }
+.result-intro { margin-top: 25px; color: #74887b; font-size: 14px; line-height: 22px; }
+.result-name { margin-top: 6px; font-size: 32px; font-weight: 700; line-height: 1.3; }
+.result-tag { margin-top: 10px; color: #71867a; font-size: 13px; line-height: 20px; }
+.result-art { display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; min-height: 165px; margin-top: 24px; padding: 20px; border-radius: 6px; color: #fff; }
+.result-art-label { font-size: 10px; font-weight: 600; opacity: .8; }
+.result-art-title { margin: 16px 0; font-size: 20px; font-weight: 600; line-height: 1.5; }
+.result-art-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; opacity: .85; }
+.section-label { margin-top: 30px; color: #c48168; font-size: 11px; font-weight: 700; }
+.section-title { margin-top: 8px; color: #2b4035; font-weight: 700; font-size: 20px; line-height: 28px; }
+.body-copy { margin-top: 12px; color: #64786c; font-size: 14px; line-height: 1.9; }
+.advice { margin: 24px 0; padding: 17px 18px; border-left: 3px solid #8db19a; background: #edf4ed; color: #62776a; font-size: 13px; line-height: 1.8; }
+.advice-title { margin-bottom: 5px; color: #3c6953; font-weight: 700; }
+.save-message { margin-bottom: 16px; color: #72877a; font-size: 12px; line-height: 20px; }
+.page-title { margin-top: 15px; color: #2b4035; font-size: 27px; font-weight: 700; line-height: 1.4; }
+.history-subtitle { margin-top: 9px; color: #829489; font-size: 13px; line-height: 21px; }
+.empty { margin: 50px 0; color: #829489; font-size: 13px; line-height: 22px; text-align: center; }
+.retry { margin: 12px auto 0; color: #376d59; font-size: 13px; }
+.record-list { margin: 24px 0; }
+.record { display: flex; align-items: center; padding: 18px 0; border-bottom: 1px solid #e3ebe4; }
+.record-main { flex: 1; min-width: 0; }
+.record-name { color: #324b3d; font-size: 16px; font-weight: 600; line-height: 24px; }
+.record-date { margin-top: 5px; color: #8a9b90; font-size: 12px; line-height: 18px; }
+.delete { padding: 10px; color: #b97764; font-size: 12px; }
+@media (max-width: 350px) {
+  .page { padding-left: 18px; padding-right: 18px; }
+  .hero-title { font-size: 27px; }
+  .question-title { font-size: 21px; }
+}
