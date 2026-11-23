@@ -23,9 +23,9 @@
     <view class="question-title">{{questions[index].title}}</view>
     <view class="question-hint">选择更接近你的一个答案</view>
     <view class="options">
-      <button wx:for="{{questions[index].options}}" wx:key="index" class="option {{selected === index ? 'option-selected' : ''}}" data-value="{{index}}" bindtap="select">
+      <view wx:for="{{questions[index].options}}" wx:key="index" class="option {{selected === index ? 'option-selected' : ''}}" data-value="{{index}}" bindtap="select" role="radio" aria-checked="{{selected === index}}" aria-label="{{item}}">
         <text class="option-letter">{{index === 0 ? 'A' : index === 1 ? 'B' : index === 2 ? 'C' : 'D'}}</text><text class="option-text">{{item}}</text><text class="option-check {{selected === index ? 'checked' : ''}}">{{selected === index ? '✓' : ''}}</text>
-      </button>
+      </view>
     </view>
     <button class="primary" bindtap="next" disabled="{{selected < 0 || loading}}">{{index === questions.length - 1 ? '查看我的结果' : '下一题'}} <text class="arrow">→</text></button>
     <button wx:if="{{index > 0}}" class="text-button" bindtap="previous">← 上一题</button>

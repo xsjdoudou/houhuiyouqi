@@ -15,7 +15,7 @@
 .art-bottom { display: flex; justify-content: space-between; align-items: center; color: #789287; font-size: 10px; }
 .details { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 21px 0; color: #72877b; font-size: 12px; }
 .detail-divider { height: 11px; width: 1px; background: #d7e0d8; }
-.primary { position: relative; box-sizing: border-box; width: 100%; min-height: 52px; padding: 16px 46px; background: #376d59; color: #fff; font-size: 15px; font-weight: 600; line-height: 20px; text-align: center; border-radius: 6px; }
+.primary { position: relative; box-sizing: border-box; width: 100%; min-width: 100%; max-width: none; min-height: 52px; padding: 16px 46px; background: #376d59; color: #fff; font-size: 15px; font-weight: 600; line-height: 20px; text-align: center; border-radius: 6px; }
 .primary[disabled] { background: #c1cec5; color: #fff; }
 .arrow { position: absolute; right: 20px; top: 15px; font-size: 18px; line-height: 20px; }
 .text-button { padding: 18px 0; width: 100%; color: #527565; font-size: 13px; line-height: 20px; text-align: center; }
@@ -28,7 +28,7 @@
 .question-number { margin-left: 4px; }
 .question-title { margin-top: 12px; color: #263b32; font-size: 23px; font-weight: 700; line-height: 1.5; }
 .question-hint { margin-top: 10px; color: #87988e; font-size: 13px; line-height: 20px; }
-.options { margin: 24px 0 28px; }
+.options { width: 100%; margin: 24px 0 28px; }
 .option { display: flex; align-items: center; min-height: 66px; width: 100%; box-sizing: border-box; padding: 13px 15px; margin-bottom: 10px; text-align: left; border: 1px solid #e0e9e1; background: #fff; border-radius: 6px; }
 .option-selected { border-color: #6f9c80; background: #edf5ee; }
 .option-letter { flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin-right: 13px; background: #f1f5f1; border-radius: 5px; color: #799081; font-size: 12px; font-weight: 700; }
