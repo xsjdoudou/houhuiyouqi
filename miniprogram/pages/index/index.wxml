@@ -3,8 +3,8 @@
 
   <view wx:if="{{view === 'home'}}" class="home">
     <view class="eyebrow"><text class="dot"></text> 关于相遇，也关于你</view>
-    <view class="hero-title">你的相处方式，<br/>像哪位嘉宾？</view>
-    <view class="hero-copy">从重逢、沟通到和解，<br/>看看八位嘉宾中，谁与你的相处方式更相似。</view>
+    <view class="hero-title">你和哪位嘉宾，<br/>可能成为好朋友？</view>
+    <view class="hero-copy">从重逢、沟通到和解，<br/>看看八位嘉宾中，你和谁可能成为好朋友。</view>
     <view class="art" aria-hidden="true">
       <view class="art-caption">FRIENDSHIP<br/>IS A JOURNEY</view>
       <view class="art-quote">相遇之后，<br/>总有新的故事。</view>
@@ -27,26 +27,35 @@
         <text class="option-letter">{{index === 0 ? 'A' : index === 1 ? 'B' : index === 2 ? 'C' : 'D'}}</text><text class="option-text">{{item}}</text><text class="option-check {{selected === index ? 'checked' : ''}}">{{selected === index ? '✓' : ''}}</text>
       </view>
     </view>
-    <button class="primary" bindtap="next" disabled="{{selected < 0 || loading}}">{{index === questions.length - 1 ? '查看我的结果' : '下一题'}} <text class="arrow">→</text></button>
     <button wx:if="{{index > 0}}" class="text-button" bindtap="previous">← 上一题</button>
     <button wx:else class="text-button" bindtap="home">返回首页</button>
   </view>
 
   <view wx:elif="{{view === 'result'}}" class="result">
     <view class="eyebrow"><text class="dot"></text> {{shared ? '一份来自朋友的分享' : '你的匹配结果'}} </view>
-    <view class="result-intro">{{shared ? 'TA 的相处方式像' : '你的相处方式像'}}</view>
+    <view class="result-intro">{{friendship ? (shared ? 'TA 可能成为好朋友的嘉宾是' : '你可能成为好朋友的嘉宾是') : (shared ? 'TA 的旧版相似嘉宾结果' : '你的旧版相似结果')}}</view>
     <view class="result-name" style="color: {{result.color}}">{{result.name}}</view>
     <view class="result-tag">{{result.tag}}</view>
     <view class="result-art" style="background: {{result.color}}"><view class="result-art-label">A LITTLE MORE ABOUT YOU</view><view class="result-art-title">每一种相处，<br/>都有自己的温度。</view><view class="result-art-footer">后会友期 <text>MEET YOU AGAIN</text></view></view>
-    <view class="section-label">ABOUT {{shared ? 'THEM' : 'YOU'}}</view>
-    <view class="section-title">关于{{shared ? 'TA' : '你'}}</view>
-    <view class="body-copy">{{result.description}}</view>
-    <view class="advice"><view class="advice-title">给{{shared ? 'TA' : '你'}}的小建议</view><view>{{result.advice}}</view></view>
+    <block wx:if="{{friendship}}">
+      <view class="section-label">YOUR FRIENDSHIP MATCH</view>
+      <view class="section-title">为什么是{{result.name}}？</view>
+      <view class="body-copy">{{friendship.intro}}</view>
+      <view class="reasons">
+        <view wx:for="{{friendship.reasons}}" wx:key="index" class="reason"><text class="reason-number">0{{index + 1}}</text><text class="reason-text">{{item}}</text></view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="section-label">PREVIOUS RESULT</view>
+      <view class="section-title">旧版测试结果</view>
+      <view class="body-copy">{{result.description}}</view>
+      <view class="advice"><view class="advice-title">小建议</view><view>{{result.advice}}</view></view>
+    </block>
     <view wx:if="{{saveMessage}}" class="save-message">{{saveMessage}}</view>
     <button wx:if="{{!shared}}" class="primary" open-type="share">分享我的结果 <text class="arrow">↗</text></button>
     <button wx:else class="primary" bindtap="start">测测我的友谊人格 <text class="arrow">→</text></button>
     <button class="text-button" bindtap="home">返回首页</button>
-    <view class="disclaimer">基于节目公开呈现的趣味联想，非官方测评，不代表嘉宾真实性格。</view>
+    <view class="disclaimer">嘉宾画像及匹配理由为趣味设定，非官方测评，不代表嘉宾真实性格或实际交友意愿。</view>
   </view>
 
   <view wx:else class="history">
@@ -58,7 +67,7 @@
     <view wx:elif="{{records.length === 0}}" class="empty">还没有测试记录，去认识一下自己吧。</view>
     <view wx:else class="record-list">
       <view wx:for="{{records}}" wx:key="id" class="record">
-        <view class="record-main" data-type="{{item.type}}" bindtap="openRecord"><view class="record-name">{{item.name}}</view><view class="record-date">{{item.date}}</view></view>
+        <view class="record-main" data-type="{{item.type}}" data-version="{{item.version}}" bindtap="openRecord"><view class="record-name">{{item.name}}</view><view class="record-date">{{item.version >= 2 ? '友谊匹配' : '旧版相似测试'}} · {{item.date}}</view></view>
         <button class="delete" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
       </view>
     </view>

@@ -46,6 +46,10 @@
 .section-label { margin-top: 30px; color: #c48168; font-size: 11px; font-weight: 700; }
 .section-title { margin-top: 8px; color: #2b4035; font-weight: 700; font-size: 20px; line-height: 28px; }
 .body-copy { margin-top: 12px; color: #64786c; font-size: 14px; line-height: 1.9; }
+.reasons { margin: 18px 0 26px; }
+.reason { display: flex; align-items: flex-start; padding: 13px 0; border-bottom: 1px solid #e3ebe4; }
+.reason-number { flex: none; margin-right: 12px; color: #c48168; font-size: 12px; font-weight: 700; line-height: 22px; }
+.reason-text { flex: 1; min-width: 0; color: #536b5d; font-size: 13px; line-height: 1.75; }
 .advice { margin: 24px 0; padding: 17px 18px; border-left: 3px solid #8db19a; background: #edf4ed; color: #62776a; font-size: 13px; line-height: 1.8; }
 .advice-title { margin-bottom: 5px; color: #3c6953; font-weight: 700; }
 .save-message { margin-bottom: 16px; color: #72877a; font-size: 12px; line-height: 20px; }

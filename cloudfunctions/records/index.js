@@ -12,8 +12,8 @@ exports.main = async (event) => {
     const answers = event.answers
     const type = calculate(answers)
     if (!type) return { ok: false }
-    await records.add({ data: { owner: OPENID, type, createdAt: new Date() } })
-    return { ok: true }
+    await records.add({ data: { owner: OPENID, type, version: 3, createdAt: new Date() } })
+    return { ok: true, type, version: 3 }
   }
   if (event.action === 'list') {
     const result = await records.where({ owner: OPENID }).orderBy('createdAt', 'desc').limit(100).get()
