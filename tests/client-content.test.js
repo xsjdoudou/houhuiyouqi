@@ -1,0 +1,10 @@
+const assert = require('assert')
+const client = require('../miniprogram/utils/content')
+const server = require('../cloudfunctions/records/content')
+
+assert.deepStrictEqual(Object.keys(client), ['questions'])
+assert.deepStrictEqual(client.questions, server.questions)
+assert.strictEqual(client.questions.length, 16)
+assert.strictEqual(client.calculate, undefined)
+assert.strictEqual(client.types, undefined)
+console.log('client content protection tests passed')

@@ -1,4 +1,5 @@
-const { questions, types, friendshipProfiles, friendshipProfilesV3, calculate } = require('../../utils/content')
+const { questions } = require('../../utils/content')
+const { checkPaymentCompatibility } = require('../../utils/payment-compatibility')
 
 Page({
   data: {
@@ -11,17 +12,12 @@ Page({
     result: null,
     resultKey: '',
     resultVersion: 1,
+    recordId: '',
     records: [],
     loading: false,
     historyError: false,
     saveMessage: '',
     shared: false
-  },
-
-  onLoad(options) {
-    if (options.type && types[options.type]) {
-      this.showResult(options.type, true, options.v === '3' ? 3 : options.v === '2' ? 2 : 1)
-    }
   },
 
   onUnload() {
@@ -60,27 +56,89 @@ Page({
       this.setData({ answers, index, selected: answers[index] === undefined ? -1 : answers[index], progress: index / questions.length * 100 })
       return
     }
-    const key = calculate(answers)
-    this.showResult(key, false, 3)
     this.setData({ loading: true, saveMessage: '正在保存记录...' })
     try {
       const response = await wx.cloud.callFunction({ name: 'records', data: { action: 'add', answers } })
-      if (!response.result || !response.result.ok) throw new Error('save failed')
-      if (response.result.version !== 3 || response.result.type !== key) {
-        this.setData({ saveMessage: '云函数版本不一致，请重新部署 records 后重新测试', loading: false })
-        return
-      }
-      this.setData({ saveMessage: '已保存到我的记录', loading: false })
+      if (!response.result || !response.result.ok || !response.result.id) throw new Error('save failed')
+      this.setData({ loading: false })
+      await this.loadRecord(response.result.id)
     } catch (error) {
       console.error('保存失败', error)
-      this.setData({ saveMessage: '保存失败，请检查云开发和云函数配置', loading: false })
+      this.setData({ saveMessage: '', loading: false })
+      wx.showToast({ title: '保存失败，请重试', icon: 'none' })
     }
   },
 
-  showResult(key, shared, version) {
-    const friendship = version === 3 ? friendshipProfilesV3[key] : version === 2 ? friendshipProfiles[key] : null
-    const result = friendship && friendship.tag ? { ...types[key], tag: friendship.tag } : types[key]
-    this.setData({ view: 'result', result, friendship: friendship || null, resultKey: key, resultVersion: friendship ? version : 1, shared, saveMessage: '' })
+  async loadRecord(id, recover) {
+    this.setData({ loading: true, recordId: id })
+    try {
+      const response = await wx.cloud.callFunction({ name: 'records', data: { action: 'get', id } })
+      let data = response.result
+      if (!data || !data.ok) throw new Error('record unavailable')
+      if (data.locked && recover) {
+        const check = await wx.cloud.callFunction({ name: 'payment', data: { action: 'reconcile', recordId: id } })
+        if (!check.result || !check.result.ok) throw new Error('payment status unavailable')
+        const retry = await wx.cloud.callFunction({ name: 'records', data: { action: 'get', id } })
+        data = retry.result
+        if (!data || !data.ok) throw new Error('record unavailable')
+      }
+      if (data.locked) {
+        this.setData({ view: 'locked', result: null, friendship: null, loading: false })
+      } else {
+        this.setData({ view: 'result', result: data.result, friendship: data.friendship, resultVersion: data.version, shared: false, loading: false })
+      }
+    } catch (error) {
+      this.setData({ loading: false })
+      wx.showToast({ title: '记录加载失败', icon: 'none' })
+    }
+  },
+
+  refreshPayment() {
+    if (!this.data.loading && this.data.recordId) this.loadRecord(this.data.recordId, true)
+  },
+
+  async buy(event) {
+    if (this.data.loading || !this.data.recordId) return
+    const compatibilityError = checkPaymentCompatibility(wx)
+    if (compatibilityError) {
+      wx.showModal({ title: '暂无法支付', content: compatibilityError, showCancel: false })
+      return
+    }
+    const productId = event.currentTarget.dataset.product
+    this.setData({ loading: true })
+    try {
+      const login = await wx.login()
+      const response = await wx.cloud.callFunction({
+        name: 'payment',
+        data: { action: 'create', recordId: this.data.recordId, productId, loginCode: login.code }
+      })
+      const order = response.result
+      if (!order || !order.ok) {
+        if (order && order.code === 'ALREADY_UNLOCKED') {
+          this.setData({ loading: false })
+          await this.loadRecord(this.data.recordId)
+        } else if (order && order.code === 'ORDER_PENDING') {
+          wx.showModal({ title: '订单确认中', content: '请先刷新支付状态，避免重复购买。', showCancel: false })
+        } else {
+          wx.showToast({ title: '支付暂不可用', icon: 'none' })
+        }
+        return
+      }
+      try {
+        await new Promise((resolve, reject) => wx.requestVirtualPayment(Object.assign({}, order.payData, { success: resolve, fail: reject })))
+      } catch (error) {
+        // The client callback can be lost after a successful payment.
+      }
+      this.setData({ loading: false })
+      await this.loadRecord(this.data.recordId, true)
+      if (this.data.view === 'locked') {
+        wx.showModal({ title: '支付状态尚未确认', content: '请先刷新支付状态，避免重复购买。', showCancel: false })
+      }
+    } catch (error) {
+      wx.showToast({ title: '支付未完成，请稍后重试', icon: 'none' })
+    } finally {
+      this.setData({ loading: false })
+    }
   },
 
   home() {
@@ -94,11 +152,9 @@ Page({
     try {
       const response = await wx.cloud.callFunction({ name: 'records', data: { action: 'list' } })
       if (!response.result || !response.result.ok) throw new Error('list failed')
-      const records = response.result.records.filter(item => types[item.type]).map(item => ({
-        id: item._id,
-        type: item.type,
+      const records = response.result.records.map(item => ({
+        id: item.id,
         version: item.version === 3 ? 3 : item.version === 2 ? 2 : 1,
-        name: types[item.type].name,
         date: new Date(item.createdAt).toLocaleDateString()
       }))
       this.setData({ records, loading: false })
@@ -110,16 +166,14 @@ Page({
   },
 
   openRecord(event) {
-    const key = event.currentTarget.dataset.type
-    const version = Number(event.currentTarget.dataset.version)
-    if (types[key]) this.showResult(key, false, version)
+    this.loadRecord(event.currentTarget.dataset.id, true)
   },
 
   deleteRecord(event) {
     const id = event.currentTarget.dataset.id
     wx.showModal({
       title: '删除这条记录？',
-      content: '删除后无法恢复。',
+      content: '删除后无法恢复，这条记录的单次解锁权益也将无法使用。',
       success: async ({ confirm }) => {
         if (!confirm) return
         try {
@@ -135,12 +189,6 @@ Page({
   },
 
   onShareAppMessage() {
-    const key = this.data.resultKey
-    if (this.data.view === 'result' && types[key]) {
-      return this.data.resultVersion >= 2
-        ? { title: `我和${types[key].name}可能成为好朋友，你会和谁成为好朋友？`, path: `/pages/index/index?type=${key}&v=${this.data.resultVersion}` }
-        : { title: `我的相处方式像${types[key].name}，来看看你像谁`, path: `/pages/index/index?type=${key}` }
-    }
     return { title: '后会友期，一起发现你的友谊人格', path: '/pages/index/index' }
   }
 })

@@ -63,6 +63,11 @@
 .record-name { color: #324b3d; font-size: 16px; font-weight: 600; line-height: 24px; }
 .record-date { margin-top: 5px; color: #8a9b90; font-size: 12px; line-height: 18px; }
 .delete { padding: 10px; color: #b97764; font-size: 12px; }
+.purchase-options { margin: 28px 0 14px; }
+.purchase-option { position: relative; box-sizing: border-box; width: 100%; min-height: 82px; margin-bottom: 12px; padding: 16px 92px 16px 18px; border: 1px solid #d8e5db; border-radius: 6px; background: #fff; text-align: left; }
+.purchase-name { color: #2b4035; font-size: 16px; font-weight: 600; line-height: 24px; }
+.purchase-detail { margin-top: 4px; color: #72877b; font-size: 12px; line-height: 20px; }
+.purchase-price { position: absolute; right: 18px; top: 27px; color: #b86d54; font-size: 18px; font-weight: 700; line-height: 24px; }
 @media (max-width: 350px) {
   .page { padding-left: 18px; padding-right: 18px; }
   .hero-title { font-size: 27px; }

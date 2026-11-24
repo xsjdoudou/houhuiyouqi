@@ -31,6 +31,23 @@
     <button wx:else class="text-button" bindtap="home">返回首页</button>
   </view>
 
+  <view wx:elif="{{view === 'locked'}}" class="result">
+    <view class="eyebrow"><text class="dot"></text> 测试已完成</view>
+    <view class="page-title">解锁你的测试结果</view>
+    <view class="history-subtitle">选择单次查看，或解锁之后的所有测试结果。</view>
+    <view class="purchase-options">
+      <button class="purchase-option" data-product="one_time" bindtap="buy" disabled="{{loading}}">
+        <view class="purchase-name">单次解锁</view><view class="purchase-detail">查看本次测试结果</view><view class="purchase-price">¥0.90</view>
+      </button>
+      <button class="purchase-option" data-product="always" bindtap="buy" disabled="{{loading}}">
+        <view class="purchase-name">永久解锁</view><view class="purchase-detail">本人今后测试均可查看</view><view class="purchase-price">¥3.90</view>
+      </button>
+    </view>
+    <button class="text-button" bindtap="refreshPayment" disabled="{{loading}}">刷新支付状态</button>
+    <button class="text-button" bindtap="history">我的测试记录</button>
+    <button class="text-button" bindtap="home">返回首页</button>
+  </view>
+
   <view wx:elif="{{view === 'result'}}" class="result">
     <view class="eyebrow"><text class="dot"></text> {{shared ? '一份来自朋友的分享' : '你的匹配结果'}} </view>
     <view class="result-intro">{{friendship ? (shared ? 'TA 可能成为好朋友的嘉宾是' : '你可能成为好朋友的嘉宾是') : (shared ? 'TA 的旧版相似嘉宾结果' : '你的旧版相似结果')}}</view>
@@ -67,7 +84,7 @@
     <view wx:elif="{{records.length === 0}}" class="empty">还没有测试记录，去认识一下自己吧。</view>
     <view wx:else class="record-list">
       <view wx:for="{{records}}" wx:key="id" class="record">
-        <view class="record-main" data-type="{{item.type}}" data-version="{{item.version}}" bindtap="openRecord"><view class="record-name">{{item.name}}</view><view class="record-date">{{item.version >= 2 ? '友谊匹配' : '旧版相似测试'}} · {{item.date}}</view></view>
+        <view class="record-main" data-id="{{item.id}}" bindtap="openRecord"><view class="record-name">测试记录</view><view class="record-date">{{item.version >= 2 ? '友谊匹配' : '旧版相似测试'}} · {{item.date}}</view></view>
         <button class="delete" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
       </view>
     </view>
