@@ -1,5 +1,6 @@
 const https = require('https')
 const { createQueryOrderRequest } = require('./query-order')
+const { logPayment } = require('./diagnostics')
 
 function requestJson(url, method, body) {
   return new Promise((resolve, reject) => {
@@ -38,11 +39,21 @@ function createWechatApi({ appId, appSecret, appKey, paymentEnv = 0 }, request =
 
   async function getAccessToken() {
     if (cachedToken && Date.now() < expiresAt) return cachedToken
-    if (!appId || !appSecret) throw new Error('Missing credentials')
+    if (!appId || !appSecret) {
+      logPayment('token_missing_credentials')
+      throw new Error('Missing credentials')
+    }
     const body = JSON.stringify({ grant_type: 'client_credential', appid: appId, secret: appSecret })
-    const response = await request('https://api.weixin.qq.com/cgi-bin/stable_token', 'POST', body)
+    let response
+    try {
+      response = await request('https://api.weixin.qq.com/cgi-bin/stable_token', 'POST', body)
+    } catch (error) {
+      logPayment('token_request_failed')
+      throw error
+    }
     if (!response || typeof response.access_token !== 'string' ||
         !response.access_token || !Number.isFinite(response.expires_in)) {
+      logPayment('token_response_invalid', { errcode: response && response.errcode })
       throw new Error('Access token request failed')
     }
     cachedToken = response.access_token
@@ -53,8 +64,24 @@ function createWechatApi({ appId, appSecret, appKey, paymentEnv = 0 }, request =
   return {
     async queryOrder(openid, orderId) {
       const accessToken = await getAccessToken()
-      const query = createQueryOrderRequest({ openid, orderId, accessToken, appKey, env: paymentEnv })
-      return request(query.url, 'POST', query.body)
+      let query
+      try {
+        query = createQueryOrderRequest({ openid, orderId, accessToken, appKey, env: paymentEnv })
+      } catch (error) {
+        logPayment('query_request_invalid')
+        throw error
+      }
+      try {
+        const response = await request(query.url, 'POST', query.body)
+        logPayment('query_response', {
+          errcode: response && response.errcode,
+          status: response && response.order && response.order.status
+        })
+        return response
+      } catch (error) {
+        logPayment('query_request_failed')
+        throw error
+      }
     }
   }
 }

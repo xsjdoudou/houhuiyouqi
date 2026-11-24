@@ -4,6 +4,7 @@ const { createHandler } = require('./handler')
 const { createWechatApi } = require('./wechat-api')
 const { handleDelivery } = require('./delivery-notify')
 const { lockId, reserveOrder } = require('./order-reservation')
+const { logPayment } = require('./diagnostics')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
@@ -125,8 +126,12 @@ exports.main = async event => {
   if (event && event.Event) {
     if (event.Event !== 'xpay_goods_deliver_notify') return { ErrCode: 1, ErrMsg: 'event not handled' }
     try {
-      return await handleDelivery(event, deps)
+      logPayment('delivery_notify_received')
+      const result = await handleDelivery(event, deps)
+      logPayment(result.ErrCode === 0 ? 'delivery_notify_success' : 'delivery_notify_rejected')
+      return result
     } catch (error) {
+      logPayment('delivery_notify_failed')
       return { ErrCode: 1, ErrMsg: 'delivery failed' }
     }
   }
