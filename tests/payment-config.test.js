@@ -1,0 +1,10 @@
+const assert = require('assert')
+const { CLOUD_ENV_ID, OFFER_ID, PRODUCTS } = require('../cloudfunctions/payment/payment-config')
+
+assert.strictEqual(CLOUD_ENV_ID, 'cloud1-d4g6rq03i03578123')
+assert.strictEqual(OFFER_ID, '1450737028')
+assert.strictEqual(PRODUCTS.one_time.price, 90)
+assert.strictEqual(PRODUCTS.always.price, 390)
+assert.strictEqual(PRODUCTS.one_time.entitlement, 'record')
+assert.strictEqual(PRODUCTS.always.entitlement, 'permanent')
+console.log('payment configuration tests passed')
