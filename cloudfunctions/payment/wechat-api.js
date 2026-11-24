@@ -32,7 +32,7 @@ function requestJson(url, method, body) {
   })
 }
 
-function createWechatApi({ appId, appSecret, appKey }, request = requestJson) {
+function createWechatApi({ appId, appSecret, appKey, paymentEnv = 0 }, request = requestJson) {
   let cachedToken = ''
   let expiresAt = 0
 
@@ -53,7 +53,7 @@ function createWechatApi({ appId, appSecret, appKey }, request = requestJson) {
   return {
     async queryOrder(openid, orderId) {
       const accessToken = await getAccessToken()
-      const query = createQueryOrderRequest({ openid, orderId, accessToken, appKey })
+      const query = createQueryOrderRequest({ openid, orderId, accessToken, appKey, env: paymentEnv })
       return request(query.url, 'POST', query.body)
     }
   }

@@ -18,9 +18,13 @@ assert.deepStrictEqual(JSON.parse(request.body), {
 })
 
 const valid = { openid: 'user', orderId: 'T1234567', accessToken: 'token', appKey: 'key' }
+const sandbox = createQueryOrderRequest(Object.assign({}, valid, { env: 1 }))
+assert.strictEqual(JSON.parse(sandbox.body).env, 1)
+assert.strictEqual(new URL(sandbox.url).searchParams.get('pay_sig'),
+  signPayRequest('/xpay/query_order', sandbox.body, 'key'))
 for (const input of [
   { openid: '' }, { orderId: '_1234567' }, { orderId: 'short' },
-  { accessToken: '' }, { appKey: '' }
+  { accessToken: '' }, { appKey: '' }, { env: '1' }, { env: 2 }
 ]) {
   assert.throws(() => createQueryOrderRequest(Object.assign({}, valid, input)))
 }

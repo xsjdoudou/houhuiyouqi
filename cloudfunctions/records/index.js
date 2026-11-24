@@ -3,7 +3,8 @@ const { createRecordsHandler } = require('./service')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const records = db.collection('test_records')
-const orders = db.collection('payment_orders')
+const orders = db.collection(process.env.VIRTUAL_PAYMENT_SANDBOX === '1'
+  ? 'payment_sandbox_orders' : 'payment_orders')
 
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()

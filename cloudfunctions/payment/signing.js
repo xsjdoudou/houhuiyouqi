@@ -15,7 +15,8 @@ function signPayRequest(uri, body, appKey) {
   return hmac(appKey, `${uri}&${body}`)
 }
 
-function createPaymentParameters({ productId, orderId, attach, appKey, sessionKey }) {
+function createPaymentParameters({ productId, orderId, attach, appKey, sessionKey, env = 0 }) {
+  if (env !== 0 && env !== 1) throw new Error('Invalid payment environment')
   if (typeof productId !== 'string' || !Object.prototype.hasOwnProperty.call(PRODUCTS, productId)) {
     throw new Error('Unknown product')
   }
@@ -27,7 +28,7 @@ function createPaymentParameters({ productId, orderId, attach, appKey, sessionKe
   const signData = JSON.stringify({
     offerId: OFFER_ID,
     buyQuantity: 1,
-    env: 0,
+    env,
     currencyType: 'CNY',
     productId,
     goodsPrice: PRODUCTS[productId].price,

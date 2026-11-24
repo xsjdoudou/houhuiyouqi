@@ -7,12 +7,16 @@ const { lockId, reserveOrder } = require('./order-reservation')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
-const orders = db.collection('payment_orders')
-const locks = db.collection('payment_order_locks')
+const sandboxEnabled = process.env.VIRTUAL_PAYMENT_SANDBOX === '1'
+const paymentEnv = sandboxEnabled ? 1 : 0
+const appKey = sandboxEnabled ? process.env.VIRTUAL_PAYMENT_SANDBOX_APP_KEY : process.env.VIRTUAL_PAYMENT_APP_KEY
+const orders = db.collection(sandboxEnabled ? 'payment_sandbox_orders' : 'payment_orders')
+const locks = db.collection(sandboxEnabled ? 'payment_sandbox_order_locks' : 'payment_order_locks')
 const wechat = createWechatApi({
   appId: process.env.WECHAT_APPID,
   appSecret: process.env.WECHAT_APP_SECRET,
-  appKey: process.env.VIRTUAL_PAYMENT_APP_KEY
+  appKey,
+  paymentEnv
 })
 
 function exchangeCode(code) {
@@ -51,7 +55,9 @@ function exchangeCode(code) {
 exports.main = async event => {
   const { OPENID } = cloud.getWXContext()
   const deps = {
-    appKey: process.env.VIRTUAL_PAYMENT_APP_KEY,
+    appKey,
+    paymentEnv,
+    sandboxEnabled,
     exchangeCode,
     getRecord: async id => {
       const result = await db.collection('test_records').where({ _id: id, owner: OPENID }).limit(1).get()

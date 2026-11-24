@@ -59,6 +59,19 @@ async function run() {
   assert.deepStrictEqual(JSON.parse(calls[1].body), { openid: 'user1', env: 0, order_id: 'T12345678' })
   await api.queryOrder('user1', 'T12345678')
   assert.strictEqual(calls.length, 3)
+  const sandboxCalls = []
+  const sandboxApi = createWechatApi({
+    appId: 'appid', appSecret: 'secret', appKey: 'sandbox-key', paymentEnv: 1
+  }, async (url, method, body) => {
+    sandboxCalls.push({ url, method, body })
+    return sandboxCalls.length === 1
+      ? { access_token: 'token', expires_in: 7200 }
+      : { errcode: 0, order: { status: 2 } }
+  })
+  await sandboxApi.queryOrder('user1', 'T12345678')
+  assert.strictEqual(JSON.parse(sandboxCalls[1].body).env, 1)
+  assert.strictEqual(new URL(sandboxCalls[1].url).searchParams.get('pay_sig'),
+    require('../cloudfunctions/payment/signing').signPayRequest('/xpay/query_order', sandboxCalls[1].body, 'sandbox-key'))
   console.log('payment reconcile tests passed')
 }
 

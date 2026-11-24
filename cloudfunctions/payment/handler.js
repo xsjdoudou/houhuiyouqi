@@ -1,9 +1,6 @@
 const { createOrder } = require('./create-order')
 const { reconcileRecord } = require('./reconcile')
 
-// Do not enable real payments until delivery, refunds and result access are complete.
-const PAYMENT_READY = false
-
 async function checkPurchase(owner, recordId, deps) {
   await reconcileRecord(owner, recordId, deps)
   if (await deps.hasAccess(owner, recordId)) return 'ALREADY_UNLOCKED'
@@ -22,7 +19,10 @@ function createHandler(deps) {
         return { ok: false, code: 'RECONCILE_FAILED' }
       }
     }
-    if (!PAYMENT_READY) return { ok: false, code: 'PAYMENT_NOT_READY' }
+    // Only the explicitly configured sandbox can create orders.
+    if (deps.paymentEnv !== 1 || !deps.sandboxEnabled || !deps.appKey) {
+      return { ok: false, code: 'PAYMENT_NOT_READY' }
+    }
     try {
       const blocked = await checkPurchase(owner, event.recordId, deps)
       if (blocked) return { ok: false, code: blocked }

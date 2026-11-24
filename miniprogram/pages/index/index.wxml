@@ -31,7 +31,7 @@
     <button wx:else class="text-button" bindtap="home">返回首页</button>
   </view>
 
-  <view wx:elif="{{view === 'locked'}}" class="result">
+  <view wx:elif="{{view === 'locked'}}" class="result locked-result">
     <view class="eyebrow"><text class="dot"></text> 测试已完成</view>
     <view class="page-title">解锁你的测试结果</view>
     <view class="history-subtitle">选择单次查看，或解锁之后的所有测试结果。</view>
@@ -39,13 +39,17 @@
       <button class="purchase-option" data-product="one_time" bindtap="buy" disabled="{{loading}}">
         <view class="purchase-name">单次解锁</view><view class="purchase-detail">查看本次测试结果</view><view class="purchase-price">¥0.90</view>
       </button>
-      <button class="purchase-option" data-product="always" bindtap="buy" disabled="{{loading}}">
+      <button class="purchase-option purchase-option-permanent" data-product="always" bindtap="buy" disabled="{{loading}}">
         <view class="purchase-name">永久解锁</view><view class="purchase-detail">本人今后测试均可查看</view><view class="purchase-price">¥3.90</view>
       </button>
     </view>
-    <button class="text-button" bindtap="refreshPayment" disabled="{{loading}}">刷新支付状态</button>
-    <button class="text-button" bindtap="history">我的测试记录</button>
-    <button class="text-button" bindtap="home">返回首页</button>
+    <view class="purchase-actions">
+      <button class="purchase-refresh" bindtap="refreshPayment" disabled="{{loading}}">刷新支付状态</button>
+      <view class="purchase-navigation">
+        <button class="purchase-nav-button" bindtap="history">我的测试记录</button>
+        <button class="purchase-nav-button" bindtap="home">返回首页</button>
+      </view>
+    </view>
   </view>
 
   <view wx:elif="{{view === 'result'}}" class="result">

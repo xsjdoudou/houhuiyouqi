@@ -63,11 +63,18 @@
 .record-name { color: #324b3d; font-size: 16px; font-weight: 600; line-height: 24px; }
 .record-date { margin-top: 5px; color: #8a9b90; font-size: 12px; line-height: 18px; }
 .delete { padding: 10px; color: #b97764; font-size: 12px; }
-.purchase-options { margin: 28px 0 14px; }
-.purchase-option { position: relative; box-sizing: border-box; width: 100%; min-height: 82px; margin-bottom: 12px; padding: 16px 92px 16px 18px; border: 1px solid #d8e5db; border-radius: 6px; background: #fff; text-align: left; }
+.purchase-options { width: 100%; margin: 28px 0 22px; }
+.purchase-option { position: relative; display: block; box-sizing: border-box; width: 100%; min-width: 100%; max-width: none; min-height: 88px; margin: 0 0 12px; padding: 18px 98px 18px 18px; border: 1px solid #d8e5db; border-radius: 6px; background: #fff; text-align: left; }
+.purchase-option-permanent { border-color: #a7c8b2; background: #f0f7f1; }
+.purchase-option[disabled] { opacity: .6; }
 .purchase-name { color: #2b4035; font-size: 16px; font-weight: 600; line-height: 24px; }
 .purchase-detail { margin-top: 4px; color: #72877b; font-size: 12px; line-height: 20px; }
-.purchase-price { position: absolute; right: 18px; top: 27px; color: #b86d54; font-size: 18px; font-weight: 700; line-height: 24px; }
+.purchase-price { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: #b86d54; font-size: 18px; font-weight: 700; line-height: 24px; }
+.purchase-actions { border-top: 1px solid #e4ebe5; padding-top: 12px; }
+.purchase-refresh { box-sizing: border-box; width: 100%; min-width: 100%; max-width: none; min-height: 48px; padding: 14px 12px; color: #376d59; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; }
+.purchase-refresh[disabled] { opacity: .6; }
+.purchase-navigation { display: flex; align-items: center; }
+.purchase-nav-button { flex: 1; min-width: 0; max-width: none; min-height: 44px; padding: 12px 4px; color: #72877b; font-size: 12px; line-height: 20px; text-align: center; }
 @media (max-width: 350px) {
   .page { padding-left: 18px; padding-right: 18px; }
   .hero-title { font-size: 27px; }

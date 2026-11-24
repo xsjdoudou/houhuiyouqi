@@ -39,9 +39,12 @@ for (const [productId, price] of [['one_time', 90], ['always', 390]]) {
 }
 
 const valid = { productId: 'one_time', orderId: 'T1234567', attach: 'T1234567', appKey: 'key', sessionKey: 'key' }
+const sandbox = createPaymentParameters(Object.assign({}, valid, { env: 1 }))
+assert.strictEqual(JSON.parse(sandbox.signData).env, 1)
+assert.strictEqual(sandbox.paySig, signPayRequest('requestVirtualPayment', sandbox.signData, 'key'))
 for (const input of [
   { productId: '__proto__' }, { productId: 'unknown' }, { orderId: '_1234567' },
-  { orderId: 'short' }, { attach: '' }, { appKey: '' }, { sessionKey: '' }
+  { orderId: 'short' }, { attach: '' }, { appKey: '' }, { sessionKey: '' }, { env: '1' }, { env: 2 }
 ]) assert.throws(() => createPaymentParameters(Object.assign({}, valid, input)))
 
 console.log('payment signing tests passed')

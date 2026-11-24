@@ -25,7 +25,7 @@ async function createOrder({ owner, recordId, productId, loginCode }, deps) {
   const orderId = 'T' + crypto.randomBytes(15).toString('hex')
   const payData = createPaymentParameters({
     productId, orderId, attach: orderId,
-    appKey: deps.appKey, sessionKey: session.sessionKey
+    appKey: deps.appKey, sessionKey: session.sessionKey, env: deps.paymentEnv
   })
   await deps.insertOrder({
     orderId, owner, recordId, productId, price: PRODUCTS[productId].price,
